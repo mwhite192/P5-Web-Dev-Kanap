@@ -1,4 +1,4 @@
-// TODO - get stuff or array of products from the backend API i.e., Products
+// Gets array of products from the backend API
 fetch("http://localhost:3000/api/products")
   .then((data) => {
     return data.json();
@@ -8,14 +8,15 @@ fetch("http://localhost:3000/api/products")
   });
 
 function insertProducts(items) {
-  // TODO - get the existing element on the page where I can insert cards i.e., I think I saw it in the section tag
+  // Gets the existing section element on the page where cards can be inserted
   const productHolder = document.getElementById("items");
-  // TODO - iterate over the stuff that came from backend API i.e., array of products
+  // iterates over the array of products that came from backend API
   for (let i = 0; i < items.length; i++) {
-    // and get the current element in the array
+    // Gets the current element in the array
     const item = items[i];
-    // and create a new card DOM element which will be inserted into the home page
-    // and insert current element's info into new DOM card element
+    // Creates a new card element 
+    // Inserts current element's info into new card element
+    // And inserts new card element into the homepage
     productHolder.innerHTML += ` <a href="./product.html?${item.id}">
     <article>
       <img src="${item.imageUrl}" alt="${item.altTxt}">
