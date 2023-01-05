@@ -17,7 +17,7 @@ function insertProducts(items) {
     // Creates a new card element 
     // Inserts current element's info into new card element
     // And inserts new card element into the homepage
-    productHolder.innerHTML += ` <a href="./product.html?${item.id}">
+    productHolder.innerHTML += ` <a href="./product.html?${item._id}">
     <article>
       <img src="${item.imageUrl}" alt="${item.altTxt}">
       <h3 class="productName">${item.name}</h3>
