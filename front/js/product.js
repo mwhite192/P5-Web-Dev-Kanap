@@ -6,11 +6,10 @@ const productID = urlParams.get("_id");
 async function getProduct() {
     const response = await fetch('http://localhost:3000/api/products/' + (productID));
     const data = await response.json();
-    console.log(data)
+    console.log(data);
 }
 getProduct();
 // TODO - Display the product on the product's page
-
     // And select the quantity
     // And select color option
 // TODO - add products to the cart
