@@ -7,35 +7,57 @@ async function getProduct() {
     const response = await fetch('http://localhost:3000/api/products/' + (productID));
     return response.json(); 
 }
-// TODO - Display the product on the product's page
+// Displays the product on the product's page
 async function loadPage() {
-    const product = await getProduct();
-    // inserts product image 
-    const productImage = document.createElement('img');
-    productImage.src = `${product.imageUrl}`;
-    document.getElementsByClassName('item__img')[0].appendChild(productImage);
-    // inserts product name 
-    const productTitle = document.getElementById('title');
-    productTitle.textContent = product.name;
-    // inserts prince of product
-    const productPrice = document.getElementById('price');
-    productPrice.textContent = product.price;
-    // inserts product description
-    const productDescription = document.getElementById('description');
-    productDescription.textContent = product.description;
+  const {imageUrl, name, price, description, colors} = await getProduct();
+  // inserts product image
+  const productImage = document.createElement("img");
+  productImage.src = `${imageUrl}`;
+  document.getElementsByClassName("item__img")[0].appendChild(productImage);
+  // inserts product name
+  const productTitle = document.getElementById("title");
+  productTitle.textContent = name;
+  // inserts prince of product
+  const productPrice = document.getElementById("price");
+  productPrice.textContent = price;
+  // inserts product description
+  const productDescription = document.getElementById("description");
+  productDescription.textContent = description;
 
-    // below adds color options to product page
-    // loops through color array and inserts product color options
-    for (let i = 0; i < product.colors.length; i++) {
-      const colorChoice = document.getElementById("colors");
-      const option = document.createElement("option");
-      option.value = product.colors[i];
-      option.text = product.colors[i];
-      colorChoice.add(option);
-    }
-    // And select the quantity  
-}
+  // below adds color options to product page
+  // loops through color array and inserts product color options
+  for (let i = 0; i < colors.length; i++) {
+    const colorChoice = document.getElementById("colors");
+    const option = document.createElement("option");
+    option.value = colors[i];
+    option.text = colors[i];
+    colorChoice.add(option);
+  }
+} 
 loadPage();
-// TODO - add products to the cart
+// TODO - Adds product to the cart
+// cart array that will be placed in local storage 
+let cart = [];
+// creates item based off product info
+const item = {
+    itemID: productID,
+    itemColor: "",
+    itemQty:"",
+};
+document.getElementById("addToCart").addEventListener("click", () => {
+    //checks to see if product already exist in cart
+    if(cart.some((item) => item.itemColor === item.itemColor)){
+        alert("Item Already Exists!");
+    }
+    else{
+        item.itemColor = document.getElementById("colors").value;
+        item.itemQty = document.getElementById("quantity").value;
+        cart.push(item);
+        console.log(cart);
+    } 
+});
+
+
+
 
 
