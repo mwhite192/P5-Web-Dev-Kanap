@@ -38,26 +38,54 @@ loadPage();
 // TODO - Adds product to the cart
 // cart array that will be placed in local storage 
 let cart = [];
-// creates item based off product info
-const item = {
-    itemID: productID,
-    itemColor: "",
-    itemQty:"",
-};
 document.getElementById("addToCart").addEventListener("click", () => {
-    //checks to see if product already exist in cart
-    if(cart.some((item) => item.itemColor === item.itemColor)){
-        alert("Item Already Exists!");
-    }
-    else{
-        item.itemColor = document.getElementById("colors").value;
-        item.itemQty = document.getElementById("quantity").value;
-        cart.push(item);
-        console.log(cart);
-    } 
+    // Adds product to cart
+    function addToCart(){
+        // Creates the product object 
+        const product = {itemID: productID};
+         // Gets the color and quantity values selected by user
+        const itemColor = document.getElementById("colors").value;
+        const itemQty = document.getElementById("quantity").value;
+        // Adds the color and quantity key value pairs to the product object
+        product.itemColor = itemColor;
+        product.itemQty = itemQty;
+        return product;
+    }    
+    cart.push(addToCart());
+     //checks to see if item already exist in cart
+     // Stores returned product to variable
+     const selectedItem = addToCart();
+     const hasMatchingItem = cart.some((thisItem) => {
+         if(thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.productID) {
+           return true;
+         } else {
+           return false;
+         }
+       });
+    console.log(hasMatchingItem);
 });
 
 
+
+
+
+
+
+
+// // creates item object based off product info
+// const item = {
+//     itemID: productID,
+//     itemColor: itemColor,
+//     itemQty: itemQty,
+// };
+// //checks to see if product already exist in cart
+// if(cart.some((item) => item.itemColor === item.itemColor)){
+//     alert("Item Already Exists!");
+// }
+// else{
+//     cart.push(item);
+//     console.log(cart);
+// } 
 
 
 
