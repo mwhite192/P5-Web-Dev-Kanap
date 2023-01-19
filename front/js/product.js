@@ -1,13 +1,13 @@
-// Gets single product id 
+// gets single product id 
 const productUrl = window.location.search;
 const urlParams = new URLSearchParams(productUrl);
 const productID = urlParams.get("_id");
-// Gets single product via product id
+// gets single product via product id
 async function getProduct() {
     const response = await fetch('http://localhost:3000/api/products/' + (productID));
     return response.json(); 
 }
-// Displays the product on the product's page
+// displays the product on the product's page
 async function loadPage() {
   const {imageUrl, name, price, description, colors} = await getProduct();
   // inserts product image
@@ -35,35 +35,34 @@ async function loadPage() {
   }
 } 
 loadPage();
-// TODO - Adds product to the cart
+// TODO - add product to the cart
 // cart array that will be placed in local storage 
 let cart = [];
+// adds product to cart
+function addToCart(){
+  // creates the product object 
+  const product = {itemID: productID};
+  // gets the color and quantity values selected by user
+  const itemColor = document.getElementById("colors").value;
+  const itemQty = document.getElementById("quantity").value;
+  // adds the color and quantity key value pairs to the product object
+  product.itemColor = itemColor;
+  product.itemQty = itemQty;
+  return product;
+}    
 document.getElementById("addToCart").addEventListener("click", () => {
-    // Adds product to cart
-    function addToCart(){
-        // Creates the product object 
-        const product = {itemID: productID};
-         // Gets the color and quantity values selected by user
-        const itemColor = document.getElementById("colors").value;
-        const itemQty = document.getElementById("quantity").value;
-        // Adds the color and quantity key value pairs to the product object
-        product.itemColor = itemColor;
-        product.itemQty = itemQty;
-        return product;
-    }    
-    cart.push(addToCart());
-     //checks to see if item already exist in cart
-     // Stores returned product to variable
+     // stores returned product to variable
      const selectedItem = addToCart();
-     const hasMatchingItem = cart.some((thisItem) => {
-         if(thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.productID) {
-           return true;
-         } else {
-           return false;
-         }
-       });
-    console.log(hasMatchingItem);
+     // checks to see if item already exist in cart
+     const hasMatchingItem = cart.some((thisItem) => (thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.itemColor));
+     // pushes item to cart or increases qty should product already exist in cart
+     if (hasMatchingItem) {
+       alert("item already exist");
+     } else {
+       cart.push(selectedItem);
+     } 
 });
+console.log(cart);
 
 
 
@@ -89,3 +88,8 @@ document.getElementById("addToCart").addEventListener("click", () => {
 
 
 
+// if (hasMatchingItem) {
+//   alert("item already exist")
+// } else {
+// cart.push(hasMatchingItem);
+// }
