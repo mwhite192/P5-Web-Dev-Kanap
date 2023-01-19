@@ -54,15 +54,17 @@ document.getElementById("addToCart").addEventListener("click", () => {
      // stores returned product to variable
      const selectedItem = addToCart();
      // checks to see if item already exist in cart
-     const hasMatchingItem = cart.some((thisItem) => (thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.itemColor));
-     // pushes item to cart or increases qty should product already exist in cart
-     if (hasMatchingItem) {
-       alert("item already exist");
+     // stores matching product in variable to allow qty update
+     const match = cart.find((thisItem) => (thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.itemColor));
+     // increases qty should product already exist in cart or pushes new item to cart  
+     if (match) {
+       match.itemQty++;
      } else {
        cart.push(selectedItem);
      } 
+     console.log(cart);
 });
-console.log(cart);
+
 
 
 
