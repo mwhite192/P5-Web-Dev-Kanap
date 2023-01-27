@@ -35,7 +35,6 @@ async function loadPage() {
   }
 } 
 loadPage();
-// TODO - add product to the cart
 // cart array that will be placed in local storage 
 let cart = [];
 // adds product to cart
@@ -49,12 +48,17 @@ function addToCart(){
   product.itemColor = itemColor;
   product.itemQty = itemQty;
   return product;
-}    
+} 
+// adds cart to local storage
+function saveCartToStorage(){
+  localStorage.setItem('shoppingCart',JSON.stringify(cart));
+}
+// checks for duplicates and adds product to cart on 'click' event
 document.getElementById("addToCart").addEventListener("click", () => {
      // stores returned product to variable
      const selectedItem = addToCart();
      // checks to see if item already exist in cart
-     // stores matching product in variable to allow qty update
+     // stores existing product in variable to allow qty update
      const match = cart.find((thisItem) => (thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.itemColor));
      // increases qty should product already exist in cart or pushes new item to cart  
      if (match) {
@@ -62,7 +66,8 @@ document.getElementById("addToCart").addEventListener("click", () => {
      } else {
        cart.push(selectedItem);
      } 
-     console.log(cart);
+     // saves cart to browser's local storage
+     saveCartToStorage();
 });
 
 
@@ -73,25 +78,4 @@ document.getElementById("addToCart").addEventListener("click", () => {
 
 
 
-// // creates item object based off product info
-// const item = {
-//     itemID: productID,
-//     itemColor: itemColor,
-//     itemQty: itemQty,
-// };
-// //checks to see if product already exist in cart
-// if(cart.some((item) => item.itemColor === item.itemColor)){
-//     alert("Item Already Exists!");
-// }
-// else{
-//     cart.push(item);
-//     console.log(cart);
-// } 
 
-
-
-// if (hasMatchingItem) {
-//   alert("item already exist")
-// } else {
-// cart.push(hasMatchingItem);
-// }
