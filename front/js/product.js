@@ -36,7 +36,7 @@ async function loadPage() {
 } 
 loadPage();
 // cart array that will be placed in local storage 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('shoppingCart')||'[]');
 // adds product to cart
 function addToCart(){
   // creates the product object 
@@ -59,17 +59,19 @@ document.getElementById("addToCart").addEventListener("click", () => {
      const selectedItem = addToCart();
      // checks to see if item already exist in cart
      // stores existing product in variable to allow qty update
-     const match = cart.find((thisItem) => (thisItem.productID === selectedItem.productID && thisItem.itemColor === selectedItem.itemColor));
+     const match = cart.find((thisItem) => (thisItem.itemID === selectedItem.itemID && thisItem.itemColor === selectedItem.itemColor));
      // increases qty should product already exist in cart or pushes new item to cart  
      if (match) {
        match.itemQty++;
+       alert('Item quantity increased')
      } else {
        cart.push(selectedItem);
+       alert('Item added to cart');
      } 
+     console.log(cart);
      // saves cart to browser's local storage
      saveCartToStorage();
 });
-
 
 
 
