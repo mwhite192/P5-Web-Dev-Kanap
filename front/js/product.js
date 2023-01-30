@@ -63,7 +63,7 @@ document.getElementById("addToCart").addEventListener("click", () => {
      // increases qty should product already exist in cart or pushes new item to cart  
      if (match) {
        match.itemQty++;
-       alert('Item quantity increased')
+       alert('Additional item added to cart')
      } else {
        cart.push(selectedItem);
        alert('Item added to cart');
