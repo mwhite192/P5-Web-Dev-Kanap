@@ -1,12 +1,13 @@
 // Gets array of products from the API
 fetch("http://localhost:3000/api/products")
+
   .then((data) => {
     return data.json();
   })
   .then((items) => {
     insertProducts(items);
   });
-  
+ // Inserts products into homepage 
 function insertProducts(items) {
   // Gets the existing section element on the page where cards can be inserted
   const productHolder = document.getElementById("items");

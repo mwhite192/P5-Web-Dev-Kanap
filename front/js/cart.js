@@ -11,11 +11,14 @@ Promise.all(customerOrderID.map(id => fetch(`http://localhost:3000/api/products/
 .then((data) =>{
   // Creates a new array with the product info and cart info combined
   const newOrder = [];
+  // Iterates over the product info array
   for (let i = 0; i < data.length; i++){
+    // Combines the product info and cart info into a new object
     const newItem = {
       ...data[i],
       ...customerOrder[i],
     }
+    // Inserts the new object into the new array
     newOrder.push(newItem);
   }
   insertCartItems(newOrder);

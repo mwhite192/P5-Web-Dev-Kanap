@@ -3,12 +3,13 @@ const productUrl = window.location.search;
 const urlParams = new URLSearchParams(productUrl);
 const productID = urlParams.get("_id");
 // Gets single product via product id
-async function getProduct() {
+async function getProduct(){
     const response = await fetch('http://localhost:3000/api/products/' + (productID));
     return response.json(); 
 }
 // Displays the product on the product's page
-async function loadPage() {
+async function loadPage(){
+  // Gets product info
   const {imageUrl, name, price, description, colors} = await getProduct();
   // Inserts product image
   const productImage = document.createElement("img");
@@ -23,14 +24,17 @@ async function loadPage() {
   // Inserts product description
   const productDescription = document.getElementById("description");
   productDescription.textContent = description;
-
   // Below adds color options to product page
   // Loops through color array and inserts product color options
-  for (let i = 0; i < colors.length; i++) {
+  for (let i = 0; i < colors.length; i++){
+    // Gets the existing select element on the page where color options can be inserted
     const colorChoice = document.getElementById("colors");
+    // Creates a new option element
     const option = document.createElement("option");
+    // Inserts current element's info into new option element
     option.value = colors[i];
     option.text = colors[i];
+    // Inserts new option element into the product page
     colorChoice.add(option);
   }
 } 
@@ -68,7 +72,6 @@ document.getElementById("addToCart").addEventListener("click", () => {
        cart.push(selectedItem);
        alert('Item added to cart');
      } 
-     console.log(cart);
      // Saves cart to browser's local storage
      saveCartToStorage();
 });
