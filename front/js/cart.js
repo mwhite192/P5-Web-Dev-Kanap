@@ -1,17 +1,33 @@
-// This file is responsible for displaying the cart items in the cart page
 // Gets the cart from local storage
 function getCartFromStorage(){
   return JSON.parse(localStorage.getItem('shoppingCart'));
 }
-// Saves cart array to customerOrder
+// Gets the cart from local storage
 const customerOrder = getCartFromStorage();
-// Iterates over the cart array 
-function insertCartItems(customerOrder){
-  for(let i = 0; i < customerOrder.length; i++){
+// Gets the itemID from each item in the cart array
+const customerOrderID = customerOrder.map(item => item.itemID);
+// Fetches the product info for each item in the cart array
+Promise.all(customerOrderID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
+.then((data) =>{
+  // Creates a new array with the product info and cart info combined
+  const newOrder = [];
+  for (let i = 0; i < data.length; i++){
+    const newItem = {
+      ...data[i],
+      ...customerOrder[i],
+    }
+    newOrder.push(newItem);
+  }
+  insertCartItems(newOrder);
+});
+// Inserts cart items into cart page
+function insertCartItems(newOrder){
+  // Iterates over the cart array 
+  for (let i = 0; i < newOrder.length; i++){
     // Gets the existing section element on the cart page where cart items can be inserted
     const cartHolder = document.getElementById("cart__items");
     // Gets the current element in the cart array
-    const item = customerOrder[i];
+    const item = newOrder[i];
     // Creates a new cart item element
     // Inserts current element's info into new cart item element
     // And inserts new cart item element into the cart page
@@ -27,8 +43,8 @@ function insertCartItems(customerOrder){
       </div>
       <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
-          <p>Quantity : ${item.itemQty}</p>
-          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+          <p>Quantity : </p>
+          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.itemQty}">
         </div>
         <div class="cart__item__content__settings__delete">
           <p class="deleteItem">Delete</p>
@@ -37,4 +53,4 @@ function insertCartItems(customerOrder){
     </div>`;
   }
 }
-insertCartItems(customerOrder);
+
