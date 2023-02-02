@@ -1,31 +1,31 @@
-// gets single product id 
+// Gets single product id 
 const productUrl = window.location.search;
 const urlParams = new URLSearchParams(productUrl);
 const productID = urlParams.get("_id");
-// gets single product via product id
+// Gets single product via product id
 async function getProduct() {
     const response = await fetch('http://localhost:3000/api/products/' + (productID));
     return response.json(); 
 }
-// displays the product on the product's page
+// Displays the product on the product's page
 async function loadPage() {
   const {imageUrl, name, price, description, colors} = await getProduct();
-  // inserts product image
+  // Inserts product image
   const productImage = document.createElement("img");
   productImage.src = `${imageUrl}`;
   document.getElementsByClassName("item__img")[0].appendChild(productImage);
-  // inserts product name
+  // Inserts product name
   const productTitle = document.getElementById("title");
   productTitle.textContent = name;
-  // inserts prince of product
+  // Inserts prince of product
   const productPrice = document.getElementById("price");
   productPrice.textContent = price;
-  // inserts product description
+  // Inserts product description
   const productDescription = document.getElementById("description");
   productDescription.textContent = description;
 
-  // below adds color options to product page
-  // loops through color array and inserts product color options
+  // Below adds color options to product page
+  // Loops through color array and inserts product color options
   for (let i = 0; i < colors.length; i++) {
     const colorChoice = document.getElementById("colors");
     const option = document.createElement("option");
@@ -35,32 +35,32 @@ async function loadPage() {
   }
 } 
 loadPage();
-// cart array that will be placed in local storage 
+// Cart array that will be placed in local storage 
 let cart = JSON.parse(localStorage.getItem('shoppingCart')||'[]');
-// adds product to cart
+// Adds product to cart
 function addToCart(){
-  // creates the product object 
+  // Creates the product object 
   const product = {itemID: productID};
-  // gets the color and quantity values selected by user
+  // Gets the color and quantity values selected by user
   const itemColor = document.getElementById("colors").value;
   const itemQty = document.getElementById("quantity").value;
-  // adds the color and quantity key value pairs to the product object
+  // Adds the color and quantity key value pairs to the product object
   product.itemColor = itemColor;
   product.itemQty = itemQty;
   return product;
 } 
-// adds cart to local storage
+// Adds cart to local storage
 function saveCartToStorage(){
   localStorage.setItem('shoppingCart',JSON.stringify(cart));
 }
-// checks for duplicates and adds product to cart on 'click' event
+// Checks for duplicates and adds product to cart on 'click' event
 document.getElementById("addToCart").addEventListener("click", () => {
-     // stores returned product to variable
+     // Stores returned product to variable
      const selectedItem = addToCart();
-     // checks to see if item already exist in cart
-     // stores existing product in variable to allow qty update
+     // Checks to see if item already exist in cart
+     // Stores existing product in variable to allow qty update
      const match = cart.find((thisItem) => (thisItem.itemID === selectedItem.itemID && thisItem.itemColor === selectedItem.itemColor));
-     // increases qty should product already exist in cart or pushes new item to cart  
+     // Increases qty should product already exist in cart or pushes new item to cart  
      if (match) {
        match.itemQty++;
        alert('Additional item added to cart')
@@ -69,7 +69,7 @@ document.getElementById("addToCart").addEventListener("click", () => {
        alert('Item added to cart');
      } 
      console.log(cart);
-     // saves cart to browser's local storage
+     // Saves cart to browser's local storage
      saveCartToStorage();
 });
 

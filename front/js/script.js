@@ -1,4 +1,4 @@
-// Gets array of products from the backend API
+// Gets array of products from the API
 fetch("http://localhost:3000/api/products")
   .then((data) => {
     return data.json();
@@ -6,11 +6,11 @@ fetch("http://localhost:3000/api/products")
   .then((items) => {
     insertProducts(items);
   });
-
+  
 function insertProducts(items) {
   // Gets the existing section element on the page where cards can be inserted
   const productHolder = document.getElementById("items");
-  // iterates over the array of products that came from backend API
+  // Iterates over the array of products that came from backend API
   for (let i = 0; i < items.length; i++) {
     // Gets the current element in the array
     const item = items[i];
