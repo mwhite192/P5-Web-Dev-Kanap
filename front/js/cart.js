@@ -3,34 +3,34 @@ function getCartFromStorage(){
   return JSON.parse(localStorage.getItem('shoppingCart'));
 }
 // Gets the cart from local storage
-const customerOrder = getCartFromStorage();
+const customerCart = getCartFromStorage();
 // Gets the itemID from each item in the cart array
-const customerOrderID = customerOrder.map(item => item.itemID);
+const customerCartID = customerCart.map(item => item.itemID);
 // Fetches the product info for each item in the cart array
-Promise.all(customerOrderID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
+Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
 .then((data) =>{
   // Creates a new array with the product info and cart info combined
-  const newOrder = [];
+  const customerOrder = [];
   // Iterates over the product info array
   for (let i = 0; i < data.length; i++){
     // Combines the product info and cart info into a new object
     const newItem = {
       ...data[i],
-      ...customerOrder[i],
+      ...customerCart[i],
     }
     // Inserts the new object into the new array
-    newOrder.push(newItem);
+    customerOrder.push(newItem);
   }
-  insertCartItems(newOrder);
+  insertCartItems(customerOrder);
 });
 // Inserts cart items into cart page
-function insertCartItems(newOrder){
+function insertCartItems(customerOrder){
   // Iterates over the cart array 
-  for (let i = 0; i < newOrder.length; i++){
+  for (let i = 0; i < customerOrder.length; i++){
     // Gets the existing section element on the cart page where cart items can be inserted
     const cartHolder = document.getElementById("cart__items");
     // Gets the current element in the cart array
-    const item = newOrder[i];
+    const item = customerOrder[i];
     // Creates a new cart item element
     // Inserts current element's info into new cart item element
     // And inserts new cart item element into the cart page
@@ -56,4 +56,16 @@ function insertCartItems(newOrder){
     </div>`;
   }
 }
+// Gets the sum of items in the cart
+function sumOfCartItems(customerCart){
+  let sum = 0;
+  const customerCartQty = customerCart.map(qty => qty.itemQty);
+  const newCustomerCartQty = customerCartQty.map(Number);
+  newCustomerCartQty.map(qty => sum += qty);
+  return sum;
+}
+// Gets the total quantity element on the cart page
+const total = document.getElementById("totalQuantity");
+// Inserts the sum of items in the cart into the total quantity element
+total.textContent = sumOfCartItems(customerCart);
 
