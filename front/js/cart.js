@@ -24,7 +24,6 @@ Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/$
   }
   insertCartItems(customerOrder);
 });
-
 // Inserts cart items into cart page
 function insertCartItems(customerOrder){
   // Iterates over the cart array 
@@ -59,6 +58,42 @@ function insertCartItems(customerOrder){
   }
 }
 
+// Gets the sum of the price of items in the cart
+Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
+.then((data) =>{
+  // Creates a new array with the product info and cart info combined
+  const customerTotal = [];
+  // Iterates over the product info array
+  for (let i = 0; i < data.length; i++){
+    // Combines the product info and cart info into a new object
+    const newItem = {
+      ...data[i],
+      ...customerCart[i],
+    }
+    customerTotal.push(newItem);
+  }
+  let cartTotal = 0;
+  // Gets the price of each item in the cart
+  const newCustomerTotal = customerTotal.map(total => total.price);
+  // Gets the quantity of each item in the cart
+  const customerQty = customerTotal.map(qty => qty.itemQty);
+  // Converts the quantity of each item in the cart to a number
+  const newCustomerQty = customerQty.map(Number);
+  // Checks if the item is in the cart more than once
+  if(newCustomerQty > 1){
+    // Gets the total price of each item in the cart
+    newCustomerTotal.map(total => cartTotal += total * newCustomerQty);
+  }
+  else{
+    newCustomerTotal.map(total => cartTotal += total);
+  }
+  // Gets the total price element on the cart page
+  const totalHolder = document.getElementById("totalPrice");
+  // Inserts the total price into the total price element
+  totalHolder.textContent = cartTotal; 
+  console.log(cartTotal);
+});
+
 // Gets the sum of items in the cart
 function sumOfCartItems(customerCart){
   let sum = 0;
@@ -71,20 +106,6 @@ function sumOfCartItems(customerCart){
 const totalQty = document.getElementById("totalQuantity");
 // Inserts the sum of items in the cart into the total quantity element
 totalQty.textContent = sumOfCartItems(customerCart);
-
-// Gets the sum of the price of items in the cart
-Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
-.then((data) =>{
-  let cartTotal = 0;
-  // Gets the price of each item in the cart
-  const customerTotal = data.map(total => total.price);
-  // Gets the quantity of each item in the cart
-  customerTotal.map(total => cartTotal += total);
-  // Gets the total price element on the cart page
-  const totalHolder = document.getElementById("totalPrice");
-  // Inserts the total price into the total price element
-  totalHolder.textContent = cartTotal; 
-});
 
 
 
