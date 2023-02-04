@@ -72,26 +72,18 @@ Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/$
     }
     customerTotal.push(newItem);
   }
-  let cartTotal = 0;
   // Gets the price of each item in the cart
   const newCustomerTotal = customerTotal.map(total => total.price);
   // Gets the quantity of each item in the cart
   const customerQty = customerTotal.map(qty => qty.itemQty);
   // Converts the quantity of each item in the cart to a number
   const newCustomerQty = customerQty.map(Number);
-  // Checks if the item is in the cart more than once
-  if(newCustomerQty > 1){
-    // Gets the total price of each item in the cart
-    newCustomerTotal.map(total => cartTotal += total * newCustomerQty);
-  }
-  else{
-    newCustomerTotal.map(total => cartTotal += total);
-  }
+  // Gets the total price of each item in the cart
+  const cartTotal = newCustomerTotal.map((total, index) => total * newCustomerQty[index]).reduce((total, index) => total + index, 0);
   // Gets the total price element on the cart page
   const totalHolder = document.getElementById("totalPrice");
   // Inserts the total price into the total price element
-  totalHolder.textContent = cartTotal; 
-  console.log(cartTotal);
+  totalHolder.textContent = cartTotal;
 });
 
 // Gets the sum of items in the cart
@@ -106,6 +98,14 @@ function sumOfCartItems(customerCart){
 const totalQty = document.getElementById("totalQuantity");
 // Inserts the sum of items in the cart into the total quantity element
 totalQty.textContent = sumOfCartItems(customerCart);
+
+
+
+
+
+
+
+
 
 
 
