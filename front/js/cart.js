@@ -4,6 +4,7 @@ function getCartFromStorage(){
 }
 // Gets the cart from local storage
 const customerCart = getCartFromStorage();
+
 // Gets the itemID from each item in the cart array
 const customerCartID = customerCart.map(item => item.itemID);
 // Fetches the product info for each item in the cart array
@@ -23,6 +24,7 @@ Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/$
   }
   insertCartItems(customerOrder);
 });
+
 // Inserts cart items into cart page
 function insertCartItems(customerOrder){
   // Iterates over the cart array 
@@ -56,16 +58,34 @@ function insertCartItems(customerOrder){
     </div>`;
   }
 }
+
 // Gets the sum of items in the cart
 function sumOfCartItems(customerCart){
   let sum = 0;
-  const customerCartQty = customerCart.map(qty => qty.itemQty);
-  const newCustomerCartQty = customerCartQty.map(Number);
-  newCustomerCartQty.map(qty => sum += qty);
+  const cartQty = customerCart.map(qty => qty.itemQty);
+  const newCartQty = cartQty.map(Number);
+  newCartQty.map(qty => sum += qty);
   return sum;
 }
 // Gets the total quantity element on the cart page
-const total = document.getElementById("totalQuantity");
+const totalQty = document.getElementById("totalQuantity");
 // Inserts the sum of items in the cart into the total quantity element
-total.textContent = sumOfCartItems(customerCart);
+totalQty.textContent = sumOfCartItems(customerCart);
+
+// Gets the sum of the price of items in the cart
+Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
+.then((data) =>{
+  let cartTotal = 0;
+  // Gets the price of each item in the cart
+  const customerTotal = data.map(total => total.price);
+  // Gets the quantity of each item in the cart
+  customerTotal.map(total => cartTotal += total);
+  // Gets the total price element on the cart page
+  const totalHolder = document.getElementById("totalPrice");
+  // Inserts the total price into the total price element
+  totalHolder.textContent = cartTotal; 
+});
+
+
+
 

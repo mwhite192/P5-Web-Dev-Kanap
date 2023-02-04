@@ -7,6 +7,7 @@ async function getProduct(){
     const response = await fetch('http://localhost:3000/api/products/' + (productID));
     return response.json(); 
 }
+
 // Displays the product on the product's page
 async function loadPage(){
   // Gets product info
@@ -39,6 +40,7 @@ async function loadPage(){
   }
 } 
 loadPage();
+
 // Cart array that will be placed in local storage 
 let cart = JSON.parse(localStorage.getItem('shoppingCart')||'[]');
 // Adds product to cart
@@ -53,6 +55,7 @@ function addToCart(){
   product.itemQty = itemQty;
   return product;
 } 
+
 // Adds cart to local storage
 function saveCartToStorage(){
   localStorage.setItem('shoppingCart',JSON.stringify(cart));
