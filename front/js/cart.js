@@ -11,23 +11,42 @@ const customerCartID = customerCart.map(item => item.itemID);
 //------------------------------------------------------
 
 // Fetches the product info for each item in the cart array
-Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
-.then((data) =>{
-  // Creates a new array with the product info and cart info combined
-  const customerOrder = [];
-  // Iterates over the product info array
-  for (let i = 0; i < data.length; i++){
-    // Combines the product info and cart info into a new object
-    const newItem = {
-      ...data[i],
-      ...customerCart[i],
+Promise.all(
+  customerCartID.map((id) =>
+    fetch(`http://localhost:3000/api/products/${id}`).then((data) =>
+      data.json()
+    )
+  )
+)
+  .then((data) => {
+    // Creates new arrays with the product info and cart info combined
+    const customerOrder = [];
+    // Iterates over the product info array
+    for (let i = 0; i < data.length; i++) {
+      // Combines the product info and cart info into a new object
+      const newItem = {
+        ...data[i],
+        ...customerCart[i],
+      };
+      // Inserts the new objects into the new arrays
+      customerOrder.push(newItem);
     }
-    // Inserts the new object into the new array
-    customerOrder.push(newItem);
-  }
-  insertCartItems(customerOrder);
-});
+    insertCartItems(customerOrder);
+    // Gets the price of each item in the cart
+    const customerTotal = customerOrder.map((total) => total.price);
+    // Gets the quantity of each item in the cart and converts it to a number
+    const customerQty = customerOrder.map((qty) => qty.itemQty).map(Number);
+    // Gets the total price of each item in the cart
+    const cartTotal = customerTotal
+      .map((itemPrice, index) => itemPrice * customerQty[index])
+      .reduce((total, index) => total + index, 0);
+    // Gets the total price element on the cart page
+    const totalHolder = document.getElementById("totalPrice");
+    // Inserts the total price into the total price element
+    totalHolder.textContent = cartTotal;
+  });
 // -----------------------------------------------------
+
 // Inserts cart items into cart page
 function insertCartItems(customerOrder){
   // Iterates over the cart array 
@@ -74,33 +93,6 @@ function getCartQty(){
 getCartQty();
 // -----------------------------------------------------
 
-// Gets the sum of the price of items in the cart
-Promise.all(customerCartID.map(id => fetch(`http://localhost:3000/api/products/${id}`).then((data) => data.json())))
-.then((data) =>{
-  // Creates a new array with the product info and cart info combined
-  const customerTotal = [];
-  // Iterates over the product info array
-  for (let i = 0; i < data.length; i++){
-    // Combines the product info and cart info into a new object
-    const newItem = {
-      ...data[i],
-      ...customerCart[i],
-    }
-    customerTotal.push(newItem);
-  }
-  // Gets the price of each item in the cart
-  const newCustomerTotal = customerTotal.map(total => total.price);
-  // Gets the quantity of each item in the cart and converts it to a number
-  const customerQty = customerTotal.map(qty => qty.itemQty).map(Number);
-  // Gets the total price of each item in the cart
-  const cartTotal = newCustomerTotal.map((itemPrice, index) => itemPrice * customerQty[index]).reduce((total, index) => total + index, 0);
-  // Gets the total price element on the cart page
-  const totalHolder = document.getElementById("totalPrice");
-  // Inserts the total price into the total price element
-  totalHolder.textContent = cartTotal;
-});
-// -----------------------------------------------------
-
 // updates the cart quantity and total price when the quantity of an item is changed
 function updateCart(){
   // Gets the cart item elements on the cart page
@@ -125,11 +117,8 @@ function updateCart(){
   // Updates the cart in local storage
   localStorage.setItem('shoppingCart', JSON.stringify(customerCart));
 }
-// event listener for the quantity of each item in the cart
-document.addEventListener('change', updateCart);
-// for (let i = 0; i < itemQty.length; i++){
-//   itemQty[i].addEventListener('change', updateCart);
-//}
+// -----------------------------------------------------
+
 
 
 
