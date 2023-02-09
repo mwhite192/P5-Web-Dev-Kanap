@@ -31,11 +31,14 @@ Promise.all(
       // Inserts the new objects into the new arrays
       customerOrder.push(newItem);
     }
+    // Inserts the cart items into the cart page
     insertCartItems(customerOrder);
+    // Saves the new cart array to local storage
+    localStorage.setItem('shoppingCart', JSON.stringify(customerOrder));
     // Gets the price of each item in the cart
     const customerTotal = customerOrder.map((total) => total.price);
     // Gets the quantity of each item in the cart and converts it to a number
-    const customerQty = customerOrder.map((qty) => qty.itemQty).map(Number);
+    const customerQty = customerOrder.map((qty) => Number(qty.itemQty));
     // Gets the total price of each item in the cart
     const cartTotal = customerTotal
       .map((itemPrice, index) => itemPrice * customerQty[index])
@@ -78,47 +81,56 @@ function insertCartItems(customerOrder){
         </div>
       </div>
     </div>`;
+    let itemQuantity = document.querySelectorAll(".itemQuantity");
+      for (let i = 0; i < itemQuantity.length; i++){
+        itemQuantity[i].addEventListener("change", updateCart);
+      }
   }
 }
 // -----------------------------------------------------
 
 // Gets the sum of the quantity of items in the cart
 function getCartQty(){
-  const cartQty = customerCart.map(qty => qty.itemQty).map(Number).reduce((sum, index) => sum + index, 0);
+  const newCustomerOrder = getCartFromStorage();
+  const cartQty = newCustomerOrder.map(qty => {
+    const articleTotal = Number(qty.itemQty);
+    const subTotal = Number(qty.itemQty) * qty.price;
+    return {subTotal, articleTotal};
+  }).reduce(({subTotal, articleTotal}, index) => ({
+    subTotal: subTotal + index.subTotal,
+    articleTotal: articleTotal + index.articleTotal}));
   // Gets the total quantity element on the cart page
   const totalQtyHolder = document.getElementById("totalQuantity");
+  // Gets the total price element on the cart page
+  const totalPriceHolder = document.getElementById("totalPrice");
   // Inserts the sum of items in the cart into the total quantity element
-  totalQtyHolder.textContent = cartQty;
+  totalQtyHolder.textContent = cartQty.articleTotal;
+  totalPriceHolder.textContent = cartQty.subTotal;
 }
 getCartQty();
 // -----------------------------------------------------
 
 // updates the cart quantity and total price when the quantity of an item is changed
-function updateCart(){
-  // Gets the cart item elements on the cart page
-  const cartItems = document.getElementsByClassName("cart__items");
-  // Iterates over the cart item elements
-  for (let i = 0; i < cartItems.length; i++){
-    // Gets the quantity of each item in the cart
-    const itemQty = cartItems[i].getElementsByClassName("itemQuantity")[0].value;
-    // Gets the itemID of each item in the cart
-    const itemID = cartItems[i].dataset.id;
-    // Gets the itemColor of each item in the cart
-    const itemColor = cartItems[i].dataset.color;
+function updateCart(event){
+  // Gets the itemID and itemColor of the current cart item element
+  const {id, color} = event.target.closest('.cart__item').dataset;
+  // Gets the itemQty of the current cart item element
+  const itemQty = event.target.value;
     // Iterates over the cart array
-    for (let j = 0; j < customerCart.length; j++){
+    for (let i = 0; i < customerCart.length; i++){
       // If the itemID and itemColor of the current cart item element matches the itemID and itemColor of the current cart array element
-      if (itemID === customerCart[j].itemID && itemColor === customerCart[j].itemColor){
+      if (id === customerCart[i].itemID && color === customerCart[i].itemColor){
         // Update the itemQty of the current cart array element
-        customerCart[j].itemQty = itemQty;
+        customerCart[i].itemQty = itemQty;
       }
     }
+    // Updates the cart in local storage
+    localStorage.setItem('shoppingCart', JSON.stringify(customerCart));
+    // reloads the page
+    location.reload();
   }
-  // Updates the cart in local storage
-  localStorage.setItem('shoppingCart', JSON.stringify(customerCart));
-}
+  console.log(customerCart);
 // -----------------------------------------------------
-
 
 
 
