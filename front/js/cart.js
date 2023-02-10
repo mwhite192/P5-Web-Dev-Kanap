@@ -85,6 +85,10 @@ function insertCartItems(customerOrder){
       for (let i = 0; i < itemQuantity.length; i++){
         itemQuantity[i].addEventListener("change", updateCart);
       }
+    let deleteItem = document.querySelectorAll(".deleteItem");
+      for (let i = 0; i < deleteItem.length; i++){
+        deleteItem[i].addEventListener("click", removeFromCart);
+      }
   }
 }
 // -----------------------------------------------------
@@ -129,8 +133,25 @@ function updateCart(event){
     // reloads the page
     location.reload();
   }
-  console.log(customerCart);
 // -----------------------------------------------------
+
+// Deletes the current cart item element from the cart page
+function removeFromCart(event){
+  // Gets the itemID and itemColor of the current cart item element
+  const {id, color} = event.target.closest('.cart__item').dataset;
+  // Iterates over the cart array
+  for (let i = 0; i < customerCart.length; i++){
+    // If the itemID and itemColor of the current cart item element matches the itemID and itemColor of the current cart array element
+    if (id === customerCart[i].itemID && color === customerCart[i].itemColor){
+      // Removes the current cart array element
+      customerCart.splice(i, 1);
+    }
+  }
+  // Updates the cart in local storage
+  localStorage.setItem('shoppingCart', JSON.stringify(customerCart));
+  // reloads the page
+  location.reload();
+}
 
 
 
