@@ -152,6 +152,49 @@ function removeFromCart(event){
   // reloads the page
   location.reload();
 }
+// -----------------------------------------------------
+
+// Gets customer information from customer info form
+// gets the customer info form
+const customerInfoHolder = document.querySelectorAll('.cart__order__form input');
+// converts customer node list into an array and loops over it
+const customerInfo = Array.from(customerInfoHolder)
+.reduce((acc, input) => ({ ...acc, [input.id]: input.value}), {});
+console.log(customerInfo);
+
+
+
+
+
+
+
+
+
+
+
+
+// // Gets customer information from customer info form
+// function getCustomerInfo(){
+//   // Gets the customer info form inputs
+//   const firstName = document.getElementById('firstName').value;
+//   const lastName = document.getElementById('lastName').value;
+//   const address = document.getElementById('address').value;
+//   const city = document.getElementById('city').value;
+//   const email = document.getElementById('email').value; 
+//   // Creates customer info object
+//   let customerInfo = {};
+//   customerInfo.firstName = firstName;
+//   customerInfo.lastName = lastName;
+//   customerInfo.address = address;
+//   customerInfo.city = city;
+//   customerInfo.email = email;
+//   // Inserts customer info object into local storage
+//   localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
+//   // Returns customer info object
+//   //return customerInfo;
+// }
+// console.log(getCustomerInfo());
+
 
 
 
