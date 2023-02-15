@@ -44,7 +44,7 @@ Promise.all(
       .map((itemPrice, index) => itemPrice * customerQty[index])
       .reduce((total, index) => total + index, 0);
     // Gets the total price element on the cart page
-    const totalHolder = document.getElementById("totalPrice");
+    const totalHolder = document.getElementById('totalPrice');
     // Inserts the total price into the total price element
     totalHolder.textContent = cartTotal;
   });
@@ -55,39 +55,39 @@ function insertCartItems(customerOrder){
   // Iterates over the cart array 
   for (let i = 0; i < customerOrder.length; i++){
     // Gets the existing section element on the cart page where cart items can be inserted
-    const cartHolder = document.getElementById("cart__items");
+    const cartHolder = document.getElementById('cart__items');
     // Gets the current element in the cart array
     const item = customerOrder[i];
     // Creates a new cart item element
     // Inserts current element's info into new cart item element
     // And inserts new cart item element into the cart page
-    cartHolder.innerHTML += `<article class="cart__item" data-id="${item.itemID}" data-color="${item.itemColor}">
-    <div class="cart__item__img">
-      <img src="${item.imageUrl}" alt="${item.altTxt}">
+    cartHolder.innerHTML += `<article class='cart__item' data-id='${item.itemID}' data-color='${item.itemColor}'>
+    <div class='cart__item__img'>
+      <img src='${item.imageUrl}' alt='${item.altTxt}'>
     </div>
-    <div class="cart__item__content">
-      <div class="cart__item__content__description">
+    <div class='cart__item__content'>
+      <div class='cart__item__content__description'>
         <h2>${item.name}</h2>
         <p>${item.itemColor}</p>
         <p>${item.price}</p>
       </div>
-      <div class="cart__item__content__settings">
-        <div class="cart__item__content__settings__quantity">
+      <div class='cart__item__content__settings'>
+        <div class='cart__item__content__settings__quantity'>
           <p>Quantity : </p>
-          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.itemQty}">
+          <input type='number' class='itemQuantity' name='itemQuantity' min='1' max='100' value='${item.itemQty}'>
         </div>
-        <div class="cart__item__content__settings__delete">
-          <p class="deleteItem">Delete</p>
+        <div class='cart__item__content__settings__delete'>
+          <p class='deleteItem'>Delete</p>
         </div>
       </div>
     </div>`;
-    let itemQuantity = document.querySelectorAll(".itemQuantity");
+    let itemQuantity = document.querySelectorAll('.itemQuantity');
       for (let i = 0; i < itemQuantity.length; i++){
-        itemQuantity[i].addEventListener("change", updateCart);
+        itemQuantity[i].addEventListener('change', updateCart);
       }
-    let deleteItem = document.querySelectorAll(".deleteItem");
+    let deleteItem = document.querySelectorAll('.deleteItem');
       for (let i = 0; i < deleteItem.length; i++){
-        deleteItem[i].addEventListener("click", removeFromCart);
+        deleteItem[i].addEventListener('click', removeFromCart);
       }
   }
 }
@@ -104,9 +104,9 @@ function getCartQty(){
     subTotal: subTotal + index.subTotal,
     articleTotal: articleTotal + index.articleTotal}));
   // Gets the total quantity element on the cart page
-  const totalQtyHolder = document.getElementById("totalQuantity");
+  const totalQtyHolder = document.getElementById('totalQuantity');
   // Gets the total price element on the cart page
-  const totalPriceHolder = document.getElementById("totalPrice");
+  const totalPriceHolder = document.getElementById('totalPrice');
   // Inserts the sum of items in the cart into the total quantity element
   totalQtyHolder.textContent = cartQty.articleTotal;
   totalPriceHolder.textContent = cartQty.subTotal;
@@ -154,13 +154,93 @@ function removeFromCart(event){
 }
 // -----------------------------------------------------
 
-// Gets customer information from customer info form
-// gets the customer info form
-const customerInfoHolder = document.querySelectorAll('.cart__order__form input');
-// converts customer node list into an array and loops over it
-const customerInfo = Array.from(customerInfoHolder)
-.reduce((acc, input) => ({ ...acc, [input.id]: input.value}), {});
-console.log(customerInfo);
+// validates customer info form
+// Gets the error message elements
+const firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+const addressErrorMsg = document.getElementById('addressErrorMsg');
+const cityErrorMsg = document.getElementById('cityErrorMsg');
+const emailErrorMsg = document.getElementById('emailErrorMsg');
+// Validates the first name input
+function validateFirstName(event){
+  const firstName = event.target.value;
+  if (firstName.length === 0){
+    firstNameErrorMsg.textContent = 'First Name Required';
+    return false;
+  }
+  if (!firstName.match(/^[a-zA-Z]+$/)){
+    firstNameErrorMsg.textContent = 'First Name must be letters only';
+    return false;
+  } 
+  firstNameErrorMsg.textContent = 'Entry Valid';
+}
+const firstNameHolder = document.getElementById('firstName');
+firstName.addEventListener('input', validateFirstName);
+
+// Validates the last name input
+function validateLastName(event){
+  const lastName = event.target.value;
+  if (lastName.length === 0){
+    lastNameErrorMsg.textContent = 'Last Name Required';
+    return false;
+  }
+  if (!lastName.match(/^[a-zA-Z]+$/)){
+    lastNameErrorMsg.textContent = 'Last Name must be letters only';
+    return false;
+  } 
+  lastNameErrorMsg.textContent = 'Entry Valid';
+}
+const lastNameHolder = document.getElementById('lastName');
+lastName.addEventListener('input', validateLastName);
+
+// Validates the address input
+function validateAddress(event){
+  const address = event.target.value;
+  if (address.length === 0){
+    addressErrorMsg.textContent = 'Address Required';
+    return false;
+  }
+  if (!address.match(/([A-Za-z0-9]+( [A-Za-z0-9]+)+)/i)){
+    addressErrorMsg.textContent = 'Address must be in the format: 123 Main St';
+    return false;
+  } 
+  addressErrorMsg.textContent = 'Entry Valid';
+}
+const address = document.getElementById('address');
+address.addEventListener('input', validateAddress);
+
+// Validates the city input
+function validateCity(event){
+  const city = event.target.value;
+  if (city.length === 0){
+    cityErrorMsg.textContent = 'City Required';
+    return false;
+  }
+  if (!city.match(/^[a-zA-Z]+$/)){
+    cityErrorMsg.textContent = 'City must be letters only';
+    return false;
+  } 
+  cityErrorMsg.textContent = 'Entry Valid';
+}
+const city = document.getElementById('city');
+city.addEventListener('input', validateCity);
+
+// Validates the email input
+function validateEmail(event){
+  const email = event.target.value;
+  if (email.length === 0){
+    emailErrorMsg.textContent = 'Email Required';
+    return false;
+  }
+  if (!email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)){
+    emailErrorMsg.textContent = 'Email must be in the format: 123@email.com';
+    return false;
+  }
+  emailErrorMsg.textContent = 'Entry Valid';
+}
+const email = document.getElementById('email');
+email.addEventListener('input', validateEmail);
+// -----------------------------------------------------
 
 
 
@@ -168,32 +248,7 @@ console.log(customerInfo);
 
 
 
-
-
-
-
-
-// // Gets customer information from customer info form
-// function getCustomerInfo(){
-//   // Gets the customer info form inputs
-//   const firstName = document.getElementById('firstName').value;
-//   const lastName = document.getElementById('lastName').value;
-//   const address = document.getElementById('address').value;
-//   const city = document.getElementById('city').value;
-//   const email = document.getElementById('email').value; 
-//   // Creates customer info object
-//   let customerInfo = {};
-//   customerInfo.firstName = firstName;
-//   customerInfo.lastName = lastName;
-//   customerInfo.address = address;
-//   customerInfo.city = city;
-//   customerInfo.email = email;
-//   // Inserts customer info object into local storage
-//   localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
-//   // Returns customer info object
-//   //return customerInfo;
-// }
-// console.log(getCustomerInfo());
+   
 
 
 
