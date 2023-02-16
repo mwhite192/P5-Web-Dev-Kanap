@@ -33,8 +33,6 @@ Promise.all(
     }
     // Inserts the cart items into the cart page
     insertCartItems(customerOrder);
-    // Saves the new cart array to local storage
-    localStorage.setItem('shoppingCart', JSON.stringify(customerOrder));
     // Gets the price of each item in the cart
     const customerTotal = customerOrder.map((total) => total.price);
     // Gets the quantity of each item in the cart and converts it to a number
@@ -162,8 +160,8 @@ const addressErrorMsg = document.getElementById('addressErrorMsg');
 const cityErrorMsg = document.getElementById('cityErrorMsg');
 const emailErrorMsg = document.getElementById('emailErrorMsg');
 // Validates the first name input
-function validateFirstName(event){
-  const firstName = event.target.value;
+function validateFirstName(){
+  const firstName = document.getElementById('firstName').value;
   if (firstName.length === 0){
     firstNameErrorMsg.textContent = 'First Name Required';
     return false;
@@ -173,13 +171,14 @@ function validateFirstName(event){
     return false;
   } 
   firstNameErrorMsg.textContent = 'Entry Valid';
+  return true;
 }
-const firstNameHolder = document.getElementById('firstName');
+const firstName = document.getElementById('firstName');
 firstName.addEventListener('input', validateFirstName);
 
 // Validates the last name input
-function validateLastName(event){
-  const lastName = event.target.value;
+function validateLastName(){
+  const lastName = document.getElementById('lastName').value;
   if (lastName.length === 0){
     lastNameErrorMsg.textContent = 'Last Name Required';
     return false;
@@ -189,13 +188,14 @@ function validateLastName(event){
     return false;
   } 
   lastNameErrorMsg.textContent = 'Entry Valid';
+  return true;
 }
-const lastNameHolder = document.getElementById('lastName');
+const lastName = document.getElementById('lastName');
 lastName.addEventListener('input', validateLastName);
 
 // Validates the address input
-function validateAddress(event){
-  const address = event.target.value;
+function validateAddress(){
+  const address = document.getElementById('address').value;
   if (address.length === 0){
     addressErrorMsg.textContent = 'Address Required';
     return false;
@@ -205,13 +205,14 @@ function validateAddress(event){
     return false;
   } 
   addressErrorMsg.textContent = 'Entry Valid';
+  return true;
 }
 const address = document.getElementById('address');
 address.addEventListener('input', validateAddress);
 
 // Validates the city input
-function validateCity(event){
-  const city = event.target.value;
+function validateCity(){
+  const city = document.getElementById('city').value;
   if (city.length === 0){
     cityErrorMsg.textContent = 'City Required';
     return false;
@@ -221,42 +222,88 @@ function validateCity(event){
     return false;
   } 
   cityErrorMsg.textContent = 'Entry Valid';
+  return true;
 }
 const city = document.getElementById('city');
 city.addEventListener('input', validateCity);
 
 // Validates the email input
-function validateEmail(event){
-  const email = event.target.value;
+function validateEmail(){
+  const email = document.getElementById('email').value;
   if (email.length === 0){
     emailErrorMsg.textContent = 'Email Required';
     return false;
   }
   if (!email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)){
-    emailErrorMsg.textContent = 'Email must be in the format: 123@email.com';
+    emailErrorMsg.textContent = 'Email Invalid';
     return false;
   }
   emailErrorMsg.textContent = 'Entry Valid';
+  return true;
 }
 const email = document.getElementById('email');
 email.addEventListener('input', validateEmail);
+
+// Validates the form
+function validateForm(){
+  if (!validateFirstName() || !validateLastName() || !validateAddress() || !validateCity() || !validateEmail()){
+    alert('Please complete all required fields and correct any errors.');
+    return false;
+  }
+  if (validateFirstName() || validateLastName() || validateAddress() || validateCity() || validateEmail()){
+    return true;
+}
+}
 // -----------------------------------------------------
 
+// Compiles the customer order and sends it to the server via a POST request when the order button is clicked
+// Defines products array
+const products = customerCartID;
+// Gets the order input element
+const customerForm = document.querySelector('#order');
+// Adds an event listener to the order button
+  customerForm.addEventListener('click', (event) => {
+    // Validates the form
+    const isFormValid = validateForm();
+    // If the form is valid then send the order
+    if (isFormValid){
+      sendOrder(event);
+    }
+  });
+// Sends the order to the server
+function sendOrder(event){
+  // Prevents the default action of the order button
+  event.preventDefault();
+  // Gets the customer info
+  const contact = {
+    contact : {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      address: address.value,
+      city: city.value,
+      email: email.value
+    },
+    products: products,
+  };
+  // Sends the customer info to the server
+  fetch('http://localhost:3000/api/products/order', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(contact)
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert('Order Submitted');
+    window.location = 'confirmation.html?id=' + data.orderId;
+  })
+}
 
 
 
-
-
-
-   
-
-
-
-
-
-
-
-
+// Your order number is: ' + data.orderId);
+//     window.location = 'confirmation.html?id=' + data.orderId;
 
 
 
