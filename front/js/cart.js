@@ -37,9 +37,15 @@ Promise.all(
     const customerTotal = customerOrder.map((total) => total.price);
     // Gets the quantity of each item in the cart and converts it to a number
     const customerQty = customerOrder.map((qty) => Number(qty.itemQty));
+    // Gets the subtotal element on the cart page
+    const subTotalClass = document.querySelectorAll('.itemSubtotal');
     // Gets the total price of each item in the cart
     const cartTotal = customerTotal
-      .map((itemPrice, index) => itemPrice * customerQty[index])
+      .map((itemPrice, index) => {
+        const thisSubtotal = itemPrice * customerQty[index];
+        subTotalClass[index].textContent = thisSubtotal;
+        return thisSubtotal;
+      })
       .reduce((total, index) => total + index, 0);
     // Gets the total price element on the cart page
     const totalHolder = document.getElementById('totalPrice');
@@ -67,7 +73,7 @@ function insertCartItems(customerOrder){
       <div class='cart__item__content__description'>
         <h2>${item.name}</h2>
         <p>${item.itemColor}</p>
-        <p>${item.price}</p>
+        <p class='itemSubtotal'>${item.price}</p>
       </div>
       <div class='cart__item__content__settings'>
         <div class='cart__item__content__settings__quantity'>

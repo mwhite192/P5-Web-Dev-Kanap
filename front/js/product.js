@@ -64,6 +64,10 @@ function saveCartToStorage(){
 document.getElementById('addToCart').addEventListener('click', () => {
      // Stores returned product to variable
      const selectedItem = addToCart();
+     if (!selectedItem.itemColor){
+      alert('Please select a color');
+      return;
+   }
      // Checks to see if item already exist in cart
      // Stores existing product in variable to allow qty update
      const match = cart.find((thisItem) => (thisItem.itemID === selectedItem.itemID && thisItem.itemColor === selectedItem.itemColor));
