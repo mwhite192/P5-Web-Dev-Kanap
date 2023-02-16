@@ -302,9 +302,5 @@ function sendOrder(event){
 
 
 
-// Your order number is: ' + data.orderId);
-//     window.location = 'confirmation.html?id=' + data.orderId;
-
-
 
 
